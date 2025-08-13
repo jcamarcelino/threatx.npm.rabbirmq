@@ -27,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/@treatx/threatx.npm.rabbirmq.git"
+    "url": "git+https://github.com/jcamarcelino/threatx.npm.rabbirmq"
   },
   "bugs": {
-    "url": "https://github.com/@treatx/threatx.npm.rabbirmq/issues"
+    "url": "https://github.com/jcamarcelino/threatx.npm.rabbirmq/issues"
   },
-  "homepage": "https://github.com/@treatx/threatx.npm.rabbirmq#readme",
+  "homepage": "https://github.com/jcamarcelino/threatx.npm.rabbirmq#readme",
 
   "publishConfig": {
     "access": "public",
@@ -57,7 +57,7 @@
     "branches": [
       "main"
     ],
-    "repositoryUrl": "https://github.com/@treatx/threatx.npm.rabbirmq.git",
+    "repositoryUrl": "https://github.com/jcamarcelino/threatx.npm.rabbirmq.git",
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
