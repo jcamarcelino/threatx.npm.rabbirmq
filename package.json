@@ -34,7 +34,6 @@
     "url": "https://github.com/jcamarcelino/threatx.npm.rabbirmq/issues"
   },
   "homepage": "https://github.com/jcamarcelino/threatx.npm.rabbirmq#readme",
-
   "publishConfig": {
     "access": "public",
     "provenance": true
