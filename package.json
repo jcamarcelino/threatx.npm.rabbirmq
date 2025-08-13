@@ -1,5 +1,5 @@
 {
-  "name": "@threatx/threatx.npm.rabbirmq",
+  "name": "@threatx/threatx-npm-rabbirmq",
   "version": "1.0.0",
   "description": "Biblioteca para auxílio a integração de publicadores e consumidores com rabbitmq, utilizando o protocolo AMQP.",
   "main": "index.js",
