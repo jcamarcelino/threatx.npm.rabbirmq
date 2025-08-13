@@ -7,45 +7,45 @@ export class FanoutTopology implements ITopology {
   constructor(private readonly logger: Logger = console) {}
 
   async assert(channel: ConfirmChannel, exchange: ExchangeOptions, queue?: QueueOptions): Promise<void> {
-    // Exchange do tipo fanout
     await channel.assertExchange(exchange.name, exchange.type, {
       durable: exchange.durable ?? true,
     });
 
     if (!queue) return;
 
-    const dlxType = queue.deadLetter.type ?? "direct";
-    const dlqDurable = queue.deadLetter.durable ?? true;
-    const dlqRoutingKey = queue.deadLetter.routingKey ?? "";
+    const dlx = {
+      type: queue.deadLetter.type ?? "direct",
+      durable: queue.deadLetter.durable ?? true,
+      routingKey: queue.deadLetter.routingKey ?? "",
+    };
 
-    // DLX
-    await channel.assertExchange(queue.deadLetter.exchange, dlxType, {
+    await channel.assertExchange(queue.deadLetter.exchange, dlx.type, {
       durable: true,
     });
 
-    // DLQ (opcional)
     if (queue.deadLetter.queue) {
       await channel.assertQueue(queue.deadLetter.queue, {
-        durable: dlqDurable,
+        durable: dlx.durable,
       });
-      await channel.bindQueue(queue.deadLetter.queue, queue.deadLetter.exchange, dlqRoutingKey);
+      await channel.bindQueue(queue.deadLetter.queue, queue.deadLetter.exchange, dlx.routingKey);
     }
 
-    // Args da fila principal
     const args: Record<string, unknown> = {
       "x-dead-letter-exchange": queue.deadLetter.exchange,
     };
-    if (dlqRoutingKey) args["x-dead-letter-routing-key"] = dlqRoutingKey;
+    if (dlx.routingKey) args["x-dead-letter-routing-key"] = dlx.routingKey;
     if (typeof queue.messageTtlMs === "number") args["x-message-ttl"] = queue.messageTtlMs;
     if (typeof queue.maxLength === "number") args["x-max-length"] = queue.maxLength;
 
-    // Fila principal
-    await channel.assertQueue(queue.name, {
-      durable: queue.durable ?? true,
-      arguments: args,
-    });
+    const opts = {
+      durable: queue.type == "quorum" ? true : queue.durable ?? true,
+      arguments: {
+        "x-queue-type": queue.type ?? "classic",
+        ...args,
+      },
+    };
 
-    // Binding da fila ao exchange fanout (sem routingKey)
+    await channel.assertQueue(queue.name, opts);
     await channel.bindQueue(queue.name, exchange.name, "");
 
     this.logger.info("[Rabbit] fanout topology asserted", {

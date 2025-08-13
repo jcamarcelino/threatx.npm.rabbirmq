@@ -17,6 +17,7 @@ export interface DeadLetterOptions {
 
 export interface QueueOptions {
   name: string;
+  type?: "classic" | "quorum"; // default: classic
   durable?: boolean;
   routingKey?: string | string[];
   messageTtlMs?: number;

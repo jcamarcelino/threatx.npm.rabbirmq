@@ -23,12 +23,10 @@ export class DirectTopology implements ITopology {
     const dlqDurable = queue.deadLetter.durable ?? true;
     const dlqRoutingKey = queue.deadLetter.routingKey ?? (Array.isArray(routingKey) ? routingKey[0] : routingKey);
 
-    // DLX
     await channel.assertExchange(queue.deadLetter.exchange, dlxType, {
       durable: true,
     });
 
-    // DLQ (opcional)
     if (queue.deadLetter.queue) {
       await channel.assertQueue(queue.deadLetter.queue, {
         durable: dlqDurable,
@@ -36,7 +34,6 @@ export class DirectTopology implements ITopology {
       await channel.bindQueue(queue.deadLetter.queue, queue.deadLetter.exchange, dlqRoutingKey);
     }
 
-    // Args da fila principal
     const args: Record<string, unknown> = {
       "x-dead-letter-exchange": queue.deadLetter.exchange,
     };
@@ -44,11 +41,15 @@ export class DirectTopology implements ITopology {
     if (typeof queue.messageTtlMs === "number") args["x-message-ttl"] = queue.messageTtlMs;
     if (typeof queue.maxLength === "number") args["x-max-length"] = queue.maxLength;
 
-    // Fila principal
-    await channel.assertQueue(queue.name, {
-      durable: queue.durable ?? true,
-      arguments: args,
-    });
+    const opts = {
+      durable: queue.type == "quorum" ? true : queue.durable ?? true,
+      arguments: {
+        "x-queue-type": queue.type ?? "classic",
+        ...args,
+      },
+    };
+
+    await channel.assertQueue(queue.name, opts);
 
     // Binding da fila principal ao exchange com múltiplos routingKeys
     const keys = Array.isArray(routingKey) ? routingKey : [routingKey];

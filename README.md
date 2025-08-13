@@ -64,9 +64,43 @@ import { Consumer } from '@threatx/threatx.npm.rabbirmq';
 * npm run build → Compila o TypeScript para JavaScript.
 * npm run release → Gera versão e publica usando semantic-release.
 
-### 🤝 Contribuições
+
+## 📦  Semantic release 
+O @semantic-release usa convenções de commit baseadas no padrão Conventional Commits para determinar automaticamente o tipo de versão (major, minor, patch) e gerar changelogs e tags. Aqui está um resumo das regras principais:
+
+### 📌 Estrutura básica de um commit:
+```bash
+<tipo>[escopo opcional]: <descrição>
+```
+### ✅ Tipos comuns:
+* feat: Uma nova funcionalidade (gera uma minor release).
+* fix: Correção de bug (gera uma patch release).
+* docs: Mudanças na documentação.
+* style: Alterações de formatação, sem impacto no código.
+* refactor: Refatoração de código, sem mudança de funcionalidade.
+* perf: Melhorias de performance.
+* test: Adição ou modificação de testes.
+* chore: Tarefas auxiliares (ex: atualizações de dependências).
+* ci: Mudanças em configurações de integração contínua.
+
+🚨 Para gerar uma versão major:
+Use BREAKING CHANGE: no corpo do commit ou adicione um ! após o tipo:
+```bash
+feat!: nova estrutura de filas quorum
+```
+ou 
+```bash
+feat: nova estrutura de filas quorum
+BREAKING CHANGE: a estrutura anterior de filas foi removida
+```
+### 🔍 Exemplos:
+* feat(queue): suporte a filas do tipo quorum
+* fix(rabbitmq): correção no binding de exchange
+* chore(deps): atualização do amqplib para versão mais recente
+
+## 🤝 Contribuições
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
-### 📄 Licença
+## 📄 Licença
 
 MIT © Julio Cesar de Almeida Marcelino
