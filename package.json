@@ -12,7 +12,8 @@
     "threatx",
     "rabbirmq",
     "messaging",
-    "queue"
+    "queue",
+    "amqp"
   ],
   "license": "MIT",
   "author": "julio.marcelino@clear.sale",
